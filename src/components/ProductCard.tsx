@@ -33,6 +33,10 @@ const ProductCard = ({ id, title, description, imageUrl }: Props) => {
           fill
           alt={`image_${id}`}
           className="rounded-t-xl"
+          placeholder="blur"
+          blurDataURL={
+            "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mOcMvNLPQAGjAKiTkt3swAAAABJRU5ErkJggg=="
+          }
         />
       </CardHeader>
       <CardContent>

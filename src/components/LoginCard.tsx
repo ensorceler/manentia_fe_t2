@@ -9,18 +9,14 @@ import {
 } from "@/ui/Card";
 import { Input } from "@/ui/Input";
 import { Label } from "@radix-ui/react-label";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useSWR, { mutate } from "swr";
 import useSWRMutation from "swr/mutation";
 import { useRouter } from "next/navigation";
 import { LoaderIcon } from "@/ui/icons";
-import { Alert, AlertDescription, AlertTitle } from "@/ui/Alert";
-import { CheckIcon, Terminal } from "lucide-react";
-import AlertModal from "./AlertModal";
 import { Toaster, toast } from "react-hot-toast";
 import { setCookieToken } from "@/utils/serverAction";
 
@@ -44,7 +40,11 @@ const loginUser = async (url: string, { arg }: any) => {
 const LoginCard = () => {
   const router = useRouter();
   const { trigger, isMutating } = useSWRMutation("api/login", loginUser);
-  const [showModal, setShowModal] = useState(false);
+
+  const [loginState, setLoginState] = useState({
+    username: "",
+    password: "",
+  });
 
   const {
     register,
@@ -53,6 +53,13 @@ const LoginCard = () => {
   } = useForm({
     resolver: zodResolver(loginSchema),
   });
+
+  const fillCredentials = () => {
+    setLoginState({
+      username: "vcholdcroftg",
+      password: "mSPzYZfR",
+    });
+  };
 
   const onSubmit = async (data: any) => {
     // login request
@@ -76,6 +83,15 @@ const LoginCard = () => {
         <CardHeader>
           <CardTitle>Login</CardTitle>
           <CardDescription>Credentials from dummyjson</CardDescription>
+          <CardDescription>
+            <Button
+              onClick={fillCredentials}
+              variant="secondary"
+              className="py-0 text-sm px-3 rounded-lg active:scale-95"
+            >
+              <p className="text-xs">Use me to fill the credentials</p>
+            </Button>
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form
@@ -88,6 +104,10 @@ const LoginCard = () => {
                 id="email"
                 placeholder="Enter your username"
                 {...register("username")}
+                value={loginState.username}
+                onChange={(e) => {
+                  setLoginState((p) => ({ ...p, username: e.target.value }));
+                }}
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -96,6 +116,10 @@ const LoginCard = () => {
                 id="password"
                 placeholder="Enter your password"
                 {...register("password")}
+                value={loginState.password}
+                onChange={(e) => {
+                  setLoginState((p) => ({ ...p, password: e.target.value }));
+                }}
               />
             </div>
             <Button>
@@ -108,19 +132,6 @@ const LoginCard = () => {
           </form>
         </CardContent>
       </Card>
-      {showModal && (
-        <AlertModal>
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              <CheckIcon className="text-green-500" />
-              <p className="text-center">Successfully Logged-In</p>
-            </div>
-            <p className="text-center">
-              you are going to be redirected to Products Page
-            </p>
-          </div>
-        </AlertModal>
-      )}
       <Toaster />
     </div>
   );
