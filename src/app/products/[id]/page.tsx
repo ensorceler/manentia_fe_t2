@@ -1,6 +1,7 @@
-import { StarIcon } from "@/ui/icons";
+import { LeftArrowIcon, StarIcon } from "@/ui/icons";
 import { getCookie } from "@/utils/serverAction";
 import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const getProductInfo = async (id: string) => {
@@ -47,16 +48,22 @@ export default async function SingleProductPage({
 
   return (
     <div className="my-20 flex justify-center items-center ">
-      <div className="flex flex-col gap-8">
-        <h1 className="text-3xl font-semibold"> Product Information</h1>
+      <div className="max-w-sm flex flex-col gap-8 ">
+        <div className="flex items-center gap-2">
+          <Link href="/products" passHref>
+            <LeftArrowIcon className="h-5 w-5 cursor-pointer" />
+          </Link>
+
+          <h1 className="text-3xl font-semibold"> Product Information</h1>
+        </div>
 
         <div className="flex flex-col gap-1">
-          <div className="relative h-48 w-full">
+          <div className="relative h-60 w-96">
             <Image
               src={product?.thumbnail}
               fill
               alt={`product_thumbnail_${product?.id}`}
-              className="rounded-t-md"
+              className="rounded-t-md w-full h-full"
             />
           </div>
           <div className="flex items-center justify-between">
@@ -77,13 +84,7 @@ export default async function SingleProductPage({
           <div className="grid grid-cols-3 gap-2">
             {product?.images?.map((item: any, index: number) => (
               <div key={index} className="relative">
-                <Image
-                  src={item}
-                  alt="item_${index}"
-                  width={50}
-                  height={50}
-                  className="w-full h-full"
-                />
+                <Image src={item} alt="item_${index}" width={50} height={50} />
               </div>
             ))}
           </div>
